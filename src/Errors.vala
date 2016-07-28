@@ -1,11 +1,11 @@
 namespace ValaGist {
 
     public errordomain Error {
-		NULL,
-		FAILED,
-		INVALID,
-		TYPE
-	}
+        NULL,
+        FAILED,
+        INVALID,
+        TYPE
+    }
 
     internal class Errors {
         public static void incorrect_token(uint error_code) throws ValaGist.Error {

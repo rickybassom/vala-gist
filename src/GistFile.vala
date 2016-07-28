@@ -46,23 +46,23 @@ namespace ValaGist{
                 temp_file_content = file_content;
                 return (string) msg.response_body.data;
             }
-		}
+        }
 
-		internal string get_temp_content(){
-		    if(temp_file_content == null){
-		        return get_content();
-		    }else{
-		        return temp_file_content;
-		    }
-		}
+        internal string get_temp_content(){
+            if(temp_file_content == null){
+                return get_content();
+            }else{
+                return temp_file_content;
+            }
+        }
 
         public void edit_filename(string filename){
-		    this.temp_filename = filename;
-		}
+            this.temp_filename = filename;
+        }
 
-		public void edit_file_content(string file_content){
-		    this.temp_file_content = file_content;
-		}
+        public void edit_file_content(string file_content){
+            this.temp_file_content = file_content;
+        }
 
     }
 }
