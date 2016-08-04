@@ -1,2 +1,2 @@
 # vala-gist
-Gist client API library for Vala
+Gist client library for Vala
