@@ -20,9 +20,9 @@ public static int main(string[] argv) {
         gist.files.foreach((file) => {
             print("\n   " + file.filename + " - " + file.raw_url);
             print("\n" + file.get_content());
-       });
+        });
 
-       print("\n------------\n");
+        print("\n------------\n");
    });
    return 0;
 }
