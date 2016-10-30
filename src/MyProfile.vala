@@ -13,7 +13,7 @@ namespace ValaGist {
 
         public MyProfile.login(string token, bool check = true) throws ValaGist.Error{
             gists = new GenericArray<Gist>();
-            if(check){
+            if(check){ // if wants to check if token if correct at contructor
                 if(auth_success(token)){
                     this.token = token;
                 }
@@ -43,8 +43,8 @@ namespace ValaGist {
             msg.request_body = body;
             session.send_message(msg);
 
-            if (msg.status_code != 200) {
-                if (msg.status_code == 401) {
+            if (msg.status_code != 200) { // if error in response
+                if (msg.status_code == 401) { // unauthorized
                     Errors.incorrect_token(msg.status_code);
                 }else{
                     if(msg.response_headers.get_one("X-RateLimit-Remaining") == "0"){
@@ -77,8 +77,8 @@ namespace ValaGist {
             msg.request_body = body;
             session.send_message(msg);
 
-            if (msg.status_code != 200) {
-                if (msg.status_code == 401) {
+            if (msg.status_code != 200) { // if error in response
+                if (msg.status_code == 401) { // unauthorized
                     Errors.incorrect_token(msg.status_code);
                 }else{
                     if(msg.response_headers.get_one("X-RateLimit-Remaining") == "0"){
@@ -94,8 +94,8 @@ namespace ValaGist {
                     print(e.message);
                 }
                 Json.Array root_object = parser.get_root().get_array();
-                root_object.foreach_element((arr, index, node) => {
-                    gists.add(new Gist.from_json(node));
+                root_object.foreach_element((arr, index, node) => { // for each gist in json
+                    gists.add(new Gist.from_json(node)); // append the this.gists field a Gist object from the json of the gist
                 });
             }
 
@@ -109,15 +109,15 @@ namespace ValaGist {
             Soup.Message msg = new Soup.Message("POST", BASE_URL + "/gists");
             Soup.MessageBody body = new Soup.MessageBody();
 
-            body.append_take(gist.to_json().data);
+            body.append_take(gist.to_json().data); // to_json() converts object to json. add to request body
 
             msg.request_headers = headers;
             msg.request_body = body;
 
             session.send_message(msg);
 
-            if (msg.status_code != 201) {
-                if (msg.status_code == 401) {
+            if (msg.status_code != 201) { // if error in response
+                if (msg.status_code == 401) { // unauthorized
                     Errors.incorrect_token(msg.status_code);
                 }else{
                     if(msg.response_headers.get_one("X-RateLimit-Remaining") == "0"){
@@ -134,20 +134,20 @@ namespace ValaGist {
             }catch(Error e){
                 print(e.message);
             }
-
-            return new Gist.from_json(root);
+            // TODO: append created gist to profile
+            return new Gist.from_json(root); // return gist created on server
         }
 
         public Gist edit(Gist gist, GenericArray<GistFile>? delete_files = null){
-            if(gist.id == null){
-                Errors.gist_not_owned(this.name, gist.name);
+            if(gist.id == null){ // gist not on server
+                Errors.gist_not_on_server(gist.name);
             }
             else if(gist.owner.id != this.id){ // if the gist has not been created by this user
                 Errors.gist_not_owned(this.name, gist.name);
             }
             else if(delete_files != null){
                 delete_files.foreach((delete_file) => {
-                    if(!gist.includes_file(delete_file.filename)){
+                    if(!gist.includes_file(delete_file.filename)){ // if gist does not include file
                         Errors.gist_file_not_found_for_delete(delete_file.filename);
                     }
                 });
@@ -169,8 +169,8 @@ namespace ValaGist {
 
             session.send_message(msg);
 
-            if (msg.status_code != 200) {
-                if (msg.status_code == 401) {
+            if (msg.status_code != 200) { // if error in response
+                if (msg.status_code == 401) { // unauthorized
                     Errors.incorrect_token(msg.status_code);
                 }else{
                     if(msg.response_headers.get_one("X-RateLimit-Remaining") == "0"){
@@ -188,7 +188,8 @@ namespace ValaGist {
             }catch(Error e){
                 print(e.message);
             }
-            return new Gist.from_json(root);
+            // TODO: change edited gist in profile gist array
+            return new Gist.from_json(root); // return edited gist from server
         }
 
     }

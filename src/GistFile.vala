@@ -12,6 +12,7 @@ namespace ValaGist{
         private Soup.Session session = new Soup.Session();
         private const string BASE_URL = "https://api.github.com";
 
+        // create a gist file object from parameters
         public GistFile.local(string filename, string file_content){
             this.filename = filename;
             this.temp_filename = this.filename;
@@ -19,15 +20,18 @@ namespace ValaGist{
             this.temp_file_content = this.file_content;
         }
 
+        // create a gist file object a json
         internal GistFile.from_json(Json.Node node){
             this.filename = node.get_object().get_string_member("filename");
-            this.temp_filename = this.filename;
+            this.temp_filename = this.filename; // temp_filename is used to store changes to the filename so orginal is unchanged
             this.g_type = node.get_object().get_string_member("type");
             this.lanuage = node.get_object().get_string_member("language");
             this.raw_url = node.get_object().get_string_member("raw_url");
             this.size = node.get_object().get_string_member("size");
         }
 
+        // get content of file object
+        // keep_refreshing states if the user wants to get new content from the server opposed to when the contructor was called
         public string get_content(bool keep_refreshing = false){
             if(file_content != null && !keep_refreshing){
                 return file_content;
@@ -48,6 +52,7 @@ namespace ValaGist{
             }
         }
 
+        // gets to the altered version of the file contents
         internal string get_temp_content(){
             if(temp_file_content == null){
                 return get_content();
