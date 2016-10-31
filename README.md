@@ -17,6 +17,7 @@ public static int main(string[] argv) {
         print(gist.created_at + " - ");
         print(gist.updated_at + " - ");
         print(gist.is_public ? "public" : "not public");
+
         gist.files.foreach((file) => {
             print("\n   " + file.filename + " - " + file.raw_url);
             print("\n" + file.get_content());

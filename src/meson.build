@@ -1,4 +1,4 @@
-vala_sources = [
+valagist_sources = [
     'ValaGist.vala',
     'Errors.vala',
     'Gist.vala',
@@ -8,36 +8,24 @@ vala_sources = [
     'Profile.vala'
 ]
 
-vala_args = [
-    '--disable-warnings',
-    '--gir=ValaGist-1.0.gir'
-    #'-X', '-fPIC', '-X', '-shared -o valagist.so', '--library=ValaGist'
-]
-
-valagist_lib = library('ValaGist', vala_sources,
+valagist_lib = library('valagist-1.0', valagist_sources,
+                  vala_args: ['--vapidir=' + meson.current_source_dir()],
+                  c_args: ['-g', '-O0', '-Wno-unused'],
                   dependencies: [glib, gobject, json_glib, libsoup],
-                  vala_args: vala_args,
                   install: true)
 
-g_ir_compiler = find_program('g-ir-compiler')
-custom_target('valagist-typelib',
-               command: [g_ir_compiler, '--shared-library=libValaGist.so', '--output', '@OUTPUT@', meson.current_build_dir() + '/ValaGist@sha/ValaGist-1.0.gir'],
-               output: 'ValaGist-1.0.typelib',
-               depends: valagist_lib,
-               install: true,
-               install_dir: get_option('libdir') + '/girepository-1.0')
-
 valagist = declare_dependency(include_directories: include_directories('.'),
-                           link_with: valagist_lib)
+                              link_with: valagist_lib)
 
-install_headers(meson.current_build_dir() + '/ValaGist.h')
+install_headers(meson.current_build_dir() +'/valagist-1.0.h')
+
+install_data([meson.current_build_dir() + '/valagist-1.0.vapi'],
+             install_dir: 'share/vala/vapi')
 
 pkgconfig = import('pkgconfig')
-pkgconfig.generate(requires: 'glib-2.0 gobject-2.0 json-glib-1.0 libsoup-2.4',
-                   libraries: valagist_lib,
+pkgconfig.generate(name: 'valagist-1.0',
+                   description: 'Gist client library for Vala',
                    version: meson.project_version(),
-                   name: 'Vala Gist',
-                   filebase: 'valagist',
-                   description: 'Vala gist api.',
-                   subdirs: 'valagist')
+                   requires: 'glib-2.0 gobject-2.0 json-glib-1.0 libsoup-2.4',
+                   libraries: valagist_lib)
 
