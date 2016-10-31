@@ -30,7 +30,7 @@ public static int main(string[] argv) {
 ```
 
 
-`valac ValaGist.vapi test.vala -X libValaGist.so -X -I. -o test`
+`valac valagist-1.0.vapi Test.vala -X libvalagist-1.0.so -X -I. -o test`
 
 `GI_TYPELIB_PATH=. LD_LIBRARY_PATH=. ./test`
 
@@ -40,4 +40,4 @@ public static int main(string[] argv) {
 `meson ..`
 
 `ninja-build`
-> On some distributions its just ninja
+> On some distributions its ninja
