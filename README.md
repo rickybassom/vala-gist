@@ -1,6 +1,14 @@
 # vala-gist
 Gist client library for Vala
 
+## Build and Install
+```sh
+mkdir build/ && cd build
+meson ..
+ninja-build # or 'ninja' on some distributions
+sudo ninja-build install
+```
+
 ## Example
 ```vala
 using ValaGist;
@@ -30,14 +38,8 @@ public static int main(string[] argv) {
 ```
 
 
-`valac valagist-1.0.vapi Test.vala -X libvalagist-1.0.so -X -I. -o test`
+```sh
+valac test.vala --pkg valagist-1.0
+./test
+```
 
-`GI_TYPELIB_PATH=. LD_LIBRARY_PATH=. ./test`
-
-## Build
-`mkdir build/ && cd build`
-
-`meson ..`
-
-`ninja-build`
-> On some distributions its ninja
