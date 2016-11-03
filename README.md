@@ -1,15 +1,6 @@
 # vala-gist
 Gist client library for Vala
 
-## Build and Install
-```sh
-mkdir build/ && cd build
-meson ..
-ninja-build # or 'ninja' on some distributions
-sudo ninja-build install
-```
-
-## Example
 ```vala
 using ValaGist;
 
@@ -18,28 +9,37 @@ public static int main(string[] argv) {
 
     GLib.GenericArray<Gist> gists = profile.list_all();
     gists.foreach ((gist) => {
-        print(gist.name + " - ");
-        print(gist.id + " - ");
-        print(gist.url + " - ");
-        print(gist.description + " - ");
-        print(gist.created_at + " - ");
-        print(gist.updated_at + " - ");
-        print(gist.is_public ? "public" : "not public");
+        print(gist.name + "\n");
+        print(gist.description + "\n");
+        print(gist.created_at + "\n");
 
         gist.files.foreach((file) => {
-            print("\n   " + file.filename + " - " + file.raw_url);
-            print("\n" + file.get_content());
+            print(file.filename + "\n");
+            print(file.get_content()+ "\n");
         });
 
-        print("\n------------\n");
+        print("\n");
    });
    return 0;
 }
 ```
-
-
 ```sh
 valac test.vala --pkg valagist-1.0
 ./test
 ```
 
+## Installation
+```sh
+mkdir build/ && cd build
+meson ..
+ninja-build # or 'ninja' on some distributions
+sudo ninja-build install
+```
+
+## Examples
+
+### Create new gist
+
+```vala
+
+```

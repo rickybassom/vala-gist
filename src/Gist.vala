@@ -16,20 +16,23 @@ namespace ValaGist{
 
         // create a gist object from parameters
         public Gist.local(string description, bool is_public,
-                           GenericArray<GistFile> files){
+                           GistFile[] files){
+            GenericArray<GistFile> _files = new GenericArray<GistFile>();
+            _files.data = files;
+
             this.description = description;
             this.temp_description = this.description;
             this.is_public = is_public;
-            if(files.length == 0){
+            if(_files.length == 0){
                 Errors.gist_needs_more_than_one_file();
             }
-            this.files = files; // orginal copy of files
+            this.files = _files; // orginal copy of files
             this.files.sort((a, b) => { // sort by filename
                 CompareFunc<string> strcmp = GLib.strcmp;
                 return strcmp(a.filename, b.filename);
             });
             this.temp_files = this.files; // temp_files is used to store changes to the files so orginal is unchanged
-            this.name = files[0].filename; // first file's name in gist is the name of the whole gist
+            this.name = _files[0].filename; // first file's name in gist is the name of the whole gist
         }
 
         // create a gist object a json gist file
@@ -88,7 +91,6 @@ namespace ValaGist{
             builder.end_object (); // }
 
             generator.set_root (builder.get_root ());
-            print(generator.to_data (null));
             return generator.to_data (null);
         }
 

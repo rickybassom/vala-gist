@@ -4,7 +4,7 @@ namespace ValaGist {
 
         public string id { get; internal set; }
         public string name { get; internal set; }
-        public GenericArray<Gist> gists { get; internal set; }
+        internal GenericArray<Gist> gists { get; set; }
         public static string token { get; private set; }
 
         private Soup.Session session = new Soup.Session();
@@ -15,10 +15,10 @@ namespace ValaGist {
             gists = new GenericArray<Gist>();
             if(check){ // if wants to check if token if correct at contructor
                 if(auth_success(token)){
-                    this.token = token;
+                    MyProfile.token = token;
                 }
             }else{
-                this.token = token;
+                MyProfile.token = token;
             }
         }
 
@@ -26,10 +26,10 @@ namespace ValaGist {
         public void relogin(string token, bool check=true) throws ValaGist.Error{
             if(check){
                 if(auth_success(token)){
-                    this.token = token;
+                    MyProfile.token = token;
                 }
             }else{
-                this.token = token;
+                MyProfile.token = token;
             }
         }
 
@@ -67,7 +67,7 @@ namespace ValaGist {
             return true;
         }
 
-        public GenericArray<Gist> list_all(){
+        public Gist[] list_all(){
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -99,10 +99,10 @@ namespace ValaGist {
                 });
             }
 
-            return gists;
+            return gists.data;
         }
 
-        public Gist create(Gist gist){
+        public Gist create(Gist gist, bool update_local_gists){
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -134,19 +134,21 @@ namespace ValaGist {
             }catch(Error e){
                 print(e.message);
             }
-            // TODO: append created gist to profile
+            if(update_local_gists) list_all();
             return new Gist.from_json(root); // return gist created on server
         }
 
-        public Gist edit(Gist gist, GenericArray<GistFile>? delete_files = null){
+        public Gist edit(Gist gist, bool update_local_gists, GistFile delete_files[] = {}){
+            GenericArray<GistFile> _delete_files = new GenericArray<GistFile>();
+            _delete_files.data = delete_files;
             if(gist.id == null){ // gist not on server
                 Errors.gist_not_on_server(gist.name);
             }
             else if(gist.owner.id != this.id){ // if the gist has not been created by this user
                 Errors.gist_not_owned(this.name, gist.name);
             }
-            else if(delete_files != null){
-                delete_files.foreach((delete_file) => {
+            else if(_delete_files.length != 0){
+                _delete_files.foreach((delete_file) => {
                     if(!gist.includes_file(delete_file.filename)){ // if gist does not include file
                         Errors.gist_file_not_found_for_delete(delete_file.filename);
                     }
@@ -158,10 +160,10 @@ namespace ValaGist {
             Soup.Message msg = new Soup.Message("PATCH", BASE_URL + "/gists/" + gist.id);
             Soup.MessageBody body = new Soup.MessageBody();
 
-            if(delete_files == null){
+            if(_delete_files.length == 0){
                 body.append_take(gist.to_json(true).data);
             }else{
-                body.append_take(gist.to_json(true, delete_files).data);
+                body.append_take(gist.to_json(true, _delete_files).data);
             }
 
             msg.request_headers = headers;
@@ -188,7 +190,7 @@ namespace ValaGist {
             }catch(Error e){
                 print(e.message);
             }
-            // TODO: change edited gist in profile gist array
+            if(update_local_gists) list_all();
             return new Gist.from_json(root); // return edited gist from server
         }
 

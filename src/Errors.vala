@@ -27,7 +27,7 @@ namespace ValaGist {
         public static void gist_file_not_found_for_delete(string file_name) throws ValaGist.Error {
             throw new Error.FAILED("Gist file \"%s\" not found for deletion.".printf(file_name));
         }
-        public static void gist_needs_more_than_one_file() throws IOError {
+        public static void gist_needs_more_than_one_file() throws ValaGist.Error {
             throw new Error.FAILED("Gist needs more than one file.");
         }
     }

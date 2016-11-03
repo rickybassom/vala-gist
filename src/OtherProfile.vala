@@ -4,7 +4,7 @@ namespace ValaGist {
 
         public string id { get; internal set; }
         public string name { get; internal set; }
-        public GenericArray<Gist> gists { get; internal set; }
+        internal GenericArray<Gist> gists { get; set; }
 
         private Soup.Session session = new Soup.Session();
         private Json.Parser parser = new Json.Parser();
@@ -64,7 +64,7 @@ namespace ValaGist {
             this.name = node.get_object().get_object_member("owner").get_string_member("login");
         }
 
-        public GenericArray<Gist> list_all(){
+        public Gist[] list_all(){
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             if(MyProfile.token != null){ // if actual user loged in
                 headers.append("Authorization", "token %s".printf(MyProfile.token)); // not essential for requests but increases rate limit
@@ -99,7 +99,7 @@ namespace ValaGist {
                 }
             }
 
-            return gists;
+            return gists.data;
         }
 
     }
