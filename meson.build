@@ -16,4 +16,4 @@ libsoup = dependency('libsoup-2.4', version: '>=2.4')
 meson.add_install_script('_install.sh')
 
 subdir('src')
-#subdir('tests')
+subdir('tests')

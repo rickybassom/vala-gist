@@ -12,7 +12,7 @@ namespace ValaGist {
 
         public OtherProfile.from_username(string name, bool check=true) throws ValaGist.Error {
             gists = new GenericArray<Gist>();
-            if(check){
+            if(check){ // if wants to check if token if correct at contructor
                 if(user_exists(name)){
                     this.name = name;
                 }
@@ -23,8 +23,8 @@ namespace ValaGist {
 
         private bool user_exists(string name) throws ValaGist.Error {
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
-            if(MyProfile.token != null){
-                headers.append("Authorization", "token %s".printf(MyProfile.token));
+            if(MyProfile.token != null){ // if actual user loged in
+                headers.append("Authorization", "token %s".printf(MyProfile.token));  // not essential for requests but increases rate limit
             }
             headers.append("User-Agent", "vala-gist");
             Soup.Message msg = new Soup.Message("GET", BASE_URL + "/users/%s".printf(name));
@@ -33,8 +33,8 @@ namespace ValaGist {
             msg.request_body = body;
             session.send_message(msg);
 
-            if (msg.status_code != 200) {
-                if (msg.status_code == 401) {
+            if (msg.status_code != 200) { // if error in response
+                if (msg.status_code == 401) { // unauthorized
                     Errors.incorrect_token(msg.status_code);
                 }else{
                     if(msg.response_headers.get_one("X-RateLimit-Remaining") == "0"){
@@ -57,6 +57,7 @@ namespace ValaGist {
             return true;
         }
 
+        // create OtherProfile object from json object
         internal OtherProfile.from_json(Json.Node node){
             gists = new GenericArray<Gist>();
             this.id = node.get_object().get_object_member("owner").get_int_member("id").to_string();
@@ -65,8 +66,8 @@ namespace ValaGist {
 
         public GenericArray<Gist> list_all(){
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
-            if(MyProfile.token != null){
-                headers.append("Authorization", "token %s".printf(MyProfile.token));
+            if(MyProfile.token != null){ // if actual user loged in
+                headers.append("Authorization", "token %s".printf(MyProfile.token)); // not essential for requests but increases rate limit
             }
             headers.append("User-Agent", "vala-gist");
             Soup.Message msg = new Soup.Message("GET", BASE_URL + "/users/%s/gists".printf(this.name));
@@ -75,8 +76,8 @@ namespace ValaGist {
             msg.request_body = body;
             session.send_message(msg);
 
-            if (msg.status_code != 200) {
-                if (msg.status_code == 401) {
+            if (msg.status_code != 200) { // if error in response
+                if (msg.status_code == 401) { // unauthorized
                     Errors.incorrect_token(msg.status_code);
                 }else{
                     if(msg.response_headers.get_one("X-RateLimit-Remaining") == "0"){
@@ -90,8 +91,8 @@ namespace ValaGist {
                     parser.load_from_data ((string) msg.response_body.data, -1);
 
                     Json.Array root_object = parser.get_root().get_array();
-                    root_object.foreach_element((arr, index, node) => {
-                        gists.add(new Gist.from_json(node));
+                    root_object.foreach_element((arr, index, node) => { // for each gist in json
+                        gists.add(new Gist.from_json(node)); // append the this.gists field a Gist object from the json of the gist
                     });
                 }catch(Error e){
                     print(e.message);
