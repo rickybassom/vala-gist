@@ -1,7 +1,6 @@
 namespace ValaGist {
 
     public class MyProfile : Profile, Object {
-
         public string id { get; internal set; }
         public string name { get; internal set; }
         internal GenericArray<Gist> internal_gists { get; set; }
@@ -11,7 +10,7 @@ namespace ValaGist {
         private Json.Parser parser = new Json.Parser();
         private const string BASE_URL = "https://api.github.com";
 
-        public MyProfile.login(string token, bool check = true) throws ValaGist.Error{
+        public MyProfile.login(string token, bool check = true) throws ValaGist.Error {
             this.internal_gists = new GenericArray<Gist>();
             if(check){ // if wants to check if token if correct at contructor
                 if(auth_success(token)){
@@ -23,7 +22,7 @@ namespace ValaGist {
         }
 
         // not sure if useful
-        public void relogin(string token, bool check=true) throws ValaGist.Error{
+        public void relogin(string token, bool check=true) throws ValaGist.Error {
             if(check){
                 if(auth_success(token)){
                     MyProfile.token = token;
@@ -33,7 +32,7 @@ namespace ValaGist {
             }
         }
 
-        private bool auth_success(string token) throws ValaGist.Error{
+        private bool auth_success(string token) throws ValaGist.Error {
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -67,7 +66,7 @@ namespace ValaGist {
             return true;
         }
 
-        public Gist[] list_all(){
+        public Gist[] list_all() {
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -102,7 +101,7 @@ namespace ValaGist {
             return this.internal_gists.data;
         }
 
-        public Gist create(Gist gist){
+        public Gist create(Gist gist) {
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -138,7 +137,7 @@ namespace ValaGist {
             return new Gist.from_json(root); // return gist created on server
         }
 
-        public Gist edit(Gist gist, GistFile delete_files[] = {}){
+        public Gist edit(Gist gist, GistFile delete_files[] = {}) {
             GenericArray<GistFile> _delete_files = new GenericArray<GistFile>();
             _delete_files.data = delete_files;
             if(gist.id == null){ // gist not on server
@@ -206,7 +205,6 @@ namespace ValaGist {
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
             Soup.Message msg = new Soup.Message("DELETE", BASE_URL + "/gists/" + gist.id);
-            Soup.MessageBody body = new Soup.MessageBody();
 
 
             msg.request_headers = headers;

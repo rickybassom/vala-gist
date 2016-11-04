@@ -1,7 +1,6 @@
 namespace ValaGist {
 
     public class OtherProfile : Profile, Object {
-
         public string id { get; internal set; }
         public string name { get; internal set; }
         internal GenericArray<Gist> internal_gists { get; set; }
@@ -58,13 +57,13 @@ namespace ValaGist {
         }
 
         // create OtherProfile object from json object
-        internal OtherProfile.from_json(Json.Node node){
+        internal OtherProfile.from_json(Json.Node node) {
             this.internal_gists = new GenericArray<Gist>();
             this.id = node.get_object().get_object_member("owner").get_int_member("id").to_string();
             this.name = node.get_object().get_object_member("owner").get_string_member("login");
         }
 
-        public Gist[] list_all(){
+        public Gist[] list_all() {
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             if(MyProfile.token != null){ // if actual user loged in
                 headers.append("Authorization", "token %s".printf(MyProfile.token)); // not essential for requests but increases rate limit

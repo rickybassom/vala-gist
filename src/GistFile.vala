@@ -1,4 +1,5 @@
-namespace ValaGist{
+namespace ValaGist {
+
     public class GistFile {
         public string filename { get; private set; }
         internal string temp_filename { get; private set; }
@@ -13,7 +14,7 @@ namespace ValaGist{
         private const string BASE_URL = "https://api.github.com";
 
         // create a gist file object from parameters
-        public GistFile.local(string filename, string file_content){
+        public GistFile.local(string filename, string file_content) {
             this.filename = filename;
             this.temp_filename = this.filename;
             this.file_content = file_content;
@@ -21,7 +22,7 @@ namespace ValaGist{
         }
 
         // create a gist file object a json
-        internal GistFile.from_json(Json.Node node){
+        internal GistFile.from_json(Json.Node node) {
             this.filename = node.get_object().get_string_member("filename");
             this.temp_filename = this.filename; // temp_filename is used to store changes to the filename so orginal is unchanged
             this.g_type = node.get_object().get_string_member("type");
@@ -32,7 +33,7 @@ namespace ValaGist{
 
         // get content of file object
         // refresh states if the user wants to get new content from the server
-        public string get_content(bool refresh = false){
+        public string get_content(bool refresh = false) {
             if(file_content != null && !refresh) return file_content;
             var headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             if(MyProfile.token != null){
@@ -51,7 +52,7 @@ namespace ValaGist{
         }
 
         // gets to the altered version of the file contents
-        internal string get_temp_content(){
+        internal string get_temp_content() {
             if(temp_file_content == null){
                 return get_content();
             }else{
@@ -59,11 +60,11 @@ namespace ValaGist{
             }
         }
 
-        public void edit_filename(string filename){
+        public void edit_filename(string filename) {
             this.temp_filename = filename;
         }
 
-        public void edit_file_content(string file_content){
+        public void edit_file_content(string file_content) {
             this.temp_file_content = file_content;
         }
 

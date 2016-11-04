@@ -1,4 +1,5 @@
-namespace ValaGist{
+namespace ValaGist {
+
     public interface Profile : Object {
         public abstract string id { get; internal set; }
         public abstract string name { get; internal set; }
@@ -7,4 +8,5 @@ namespace ValaGist{
         public abstract Gist[] list_all();
 
     }
+
 }

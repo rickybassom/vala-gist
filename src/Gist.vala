@@ -1,7 +1,6 @@
 namespace ValaGist{
 
     public class Gist {
-
         public string id { get; private set; }
         public string name { get; private set; }
         public string url { get; private set; }
@@ -20,7 +19,7 @@ namespace ValaGist{
 
         // create a gist object from parameters
         public Gist.local(string description, bool is_public,
-                           GistFile[] files){
+                           GistFile[] files) {
             internal_files = new GenericArray<GistFile>();
             this.internal_files.data = files;
 
@@ -39,7 +38,7 @@ namespace ValaGist{
         }
 
         // create a gist object a json gist file
-        internal Gist.from_json(Json.Node node){
+        internal Gist.from_json(Json.Node node) {
             this.internal_files = new GenericArray<GistFile>(); // array used to store files of gist
 
             // set object fields to node properties
@@ -83,7 +82,7 @@ namespace ValaGist{
                 files_json.add_string_value (use_temp ? file.get_temp_content() : file.get_content()); // "content": "contents of gist"
                 files_json.end_object (); // }
             });
-            if (delete_files.length != 0){
+            if (delete_files.length != 0) {
                 foreach (GistFile delete_file in delete_files) {
                     files_json.set_member_name (delete_file.filename)
                         .add_null_value (); // "this is a filename": null
@@ -98,7 +97,7 @@ namespace ValaGist{
         }
 
         // checks if filename is in the gists files
-        internal bool includes_file(string filename){
+        internal bool includes_file(string filename) {
             bool found = false;
             this.internal_files.foreach((file) => {
                 if(file.filename == filename){
@@ -109,11 +108,11 @@ namespace ValaGist{
             return found;
         }
 
-        public void edit_description(string description){
+        public void edit_description(string description) {
             this.temp_description = description;  // changes non-orginal copy of description
         }
 
-        public void add_file(GistFile file){
+        public void add_file(GistFile file) {
             this.temp_files.add(file); // changes non-orginal copy of files
         }
 
