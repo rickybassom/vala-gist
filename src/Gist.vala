@@ -59,7 +59,7 @@ namespace ValaGist{
         }
 
         // converts object to json
-        internal string to_json(bool use_temp = false, GenericArray<GistFile>? delete_files = null) {
+        internal string to_json(bool use_temp = false, GistFile[] delete_files = {}) {
             // See below for example gist in json format
             var generator = new Json.Generator ();
 
@@ -83,11 +83,11 @@ namespace ValaGist{
                 files_json.add_string_value (use_temp ? file.get_temp_content() : file.get_content()); // "content": "contents of gist"
                 files_json.end_object (); // }
             });
-            if(delete_files != null){
-                delete_files.foreach((delete_file) => {
+            if (delete_files.length != 0){
+                foreach (GistFile delete_file in delete_files) {
                     files_json.set_member_name (delete_file.filename)
                         .add_null_value (); // "this is a filename": null
-                });
+                }
             }
             files_json.end_object (); // }
 

@@ -4,7 +4,7 @@ namespace ValaGist{
         public abstract string name { get; internal set; }
         internal abstract GenericArray<Gist> internal_gists { get; set; }
 
-        public abstract Gist[] list_all(bool fetch_from_server = true);
+        public abstract Gist[] list_all();
 
     }
 }

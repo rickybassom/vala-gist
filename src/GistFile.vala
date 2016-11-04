@@ -31,25 +31,23 @@ namespace ValaGist{
         }
 
         // get content of file object
-        // keep_refreshing states if the user wants to get new content from the server opposed to when the contructor was called
-        public string get_content(bool keep_refreshing = false){
-            if(file_content != null && !keep_refreshing){
-                return file_content;
-            }else{
-                var headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
-                if(MyProfile.token != null){
-                    headers.append("Authorization", "token %s".printf(MyProfile.token));
-                }
-                headers.append("User-Agent", "vala-gist");
-                Soup.Message msg = new Soup.Message("GET", raw_url);
-                Soup.MessageBody body = new Soup.MessageBody();
-                msg.request_headers = headers;
-                msg.request_body = body;
-                session.send_message(msg);
-                file_content = (string) msg.response_body.data;
-                temp_file_content = file_content;
-                return (string) msg.response_body.data;
+        // refresh states if the user wants to get new content from the server
+        public string get_content(bool refresh = false){
+            if(file_content != null && !refresh) return file_content;
+            var headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
+            if(MyProfile.token != null){
+                headers.append("Authorization", "token %s".printf(MyProfile.token));
             }
+            headers.append("User-Agent", "vala-gist");
+            Soup.Message msg = new Soup.Message("GET", raw_url);
+            Soup.MessageBody body = new Soup.MessageBody();
+            msg.request_headers = headers;
+            msg.request_body = body;
+            session.send_message(msg);
+            file_content = (string) msg.response_body.data;
+            temp_file_content = file_content;
+            return (string) msg.response_body.data;
+
         }
 
         // gets to the altered version of the file contents

@@ -64,8 +64,7 @@ namespace ValaGist {
             this.name = node.get_object().get_object_member("owner").get_string_member("login");
         }
 
-        public Gist[] list_all(bool fetch_from_server = true){
-            if(!fetch_from_server && this.internal_gists.length != 0) return this.internal_gists.data;
+        public Gist[] list_all(){
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             if(MyProfile.token != null){ // if actual user loged in
                 headers.append("Authorization", "token %s".printf(MyProfile.token)); // not essential for requests but increases rate limit

@@ -67,8 +67,7 @@ namespace ValaGist {
             return true;
         }
 
-        public Gist[] list_all(bool fetch_from_server = true){
-            if(!fetch_from_server && this.internal_gists.length != 0) return this.internal_gists.data;
+        public Gist[] list_all(){
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -103,7 +102,7 @@ namespace ValaGist {
             return this.internal_gists.data;
         }
 
-        public Gist create(Gist gist, bool update_local_gists){
+        public Gist create(Gist gist){
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -135,11 +134,11 @@ namespace ValaGist {
             }catch(Error e){
                 print(e.message);
             }
-            if(update_local_gists) list_all();
+            list_all();
             return new Gist.from_json(root); // return gist created on server
         }
 
-        public Gist edit(Gist gist, bool update_local_gists, GistFile delete_files[] = {}){
+        public Gist edit(Gist gist, GistFile delete_files[] = {}){
             GenericArray<GistFile> _delete_files = new GenericArray<GistFile>();
             _delete_files.data = delete_files;
             if(gist.id == null){ // gist not on server
@@ -164,7 +163,7 @@ namespace ValaGist {
             if(_delete_files.length == 0){
                 body.append_take(gist.to_json(true).data);
             }else{
-                body.append_take(gist.to_json(true, _delete_files).data);
+                body.append_take(gist.to_json(true, _delete_files.data).data);
             }
 
             msg.request_headers = headers;
@@ -191,8 +190,42 @@ namespace ValaGist {
             }catch(Error e){
                 print(e.message);
             }
-            if(update_local_gists) list_all();
+            list_all();
             return new Gist.from_json(root); // return edited gist from server
+        }
+
+        public void delete(Gist gist) {
+            if(gist.id == null){ // gist not on server
+                Errors.gist_not_on_server(gist.name);
+            }
+            else if(gist.owner.id != this.id){ // if the gist has not been created by this user
+                Errors.gist_not_owned(this.name, gist.name);
+            }
+
+            Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
+            headers.append("Authorization", "token %s".printf(token));
+            headers.append("User-Agent", "vala-gist");
+            Soup.Message msg = new Soup.Message("DELETE", BASE_URL + "/gists/" + gist.id);
+            Soup.MessageBody body = new Soup.MessageBody();
+
+
+            msg.request_headers = headers;
+
+            session.send_message(msg);
+
+            if (msg.status_code != 204) { // if error in response
+                if (msg.status_code == 401) { // unauthorized
+                    Errors.incorrect_token(msg.status_code);
+                }else{
+                    if(msg.response_headers.get_one("X-RateLimit-Remaining") == "0"){
+                        Errors.rate_limit_exceeded();
+                    }else{
+                        Errors.other_network(msg.status_code);
+                    }
+                }
+            }
+
+            list_all();
         }
 
     }
