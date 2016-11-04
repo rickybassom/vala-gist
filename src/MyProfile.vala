@@ -4,7 +4,7 @@ namespace ValaGist {
 
         public string id { get; internal set; }
         public string name { get; internal set; }
-        internal GenericArray<Gist> gists { get; set; }
+        internal GenericArray<Gist> internal_gists { get; set; }
         public static string token { get; private set; }
 
         private Soup.Session session = new Soup.Session();
@@ -12,7 +12,7 @@ namespace ValaGist {
         private const string BASE_URL = "https://api.github.com";
 
         public MyProfile.login(string token, bool check = true) throws ValaGist.Error{
-            gists = new GenericArray<Gist>();
+            this.internal_gists = new GenericArray<Gist>();
             if(check){ // if wants to check if token if correct at contructor
                 if(auth_success(token)){
                     MyProfile.token = token;
@@ -67,7 +67,8 @@ namespace ValaGist {
             return true;
         }
 
-        public Gist[] list_all(){
+        public Gist[] list_all(bool fetch_from_server = true){
+            if(!fetch_from_server && this.internal_gists.length != 0) return this.internal_gists.data;
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");
@@ -95,11 +96,11 @@ namespace ValaGist {
                 }
                 Json.Array root_object = parser.get_root().get_array();
                 root_object.foreach_element((arr, index, node) => { // for each gist in json
-                    gists.add(new Gist.from_json(node)); // append the this.gists field a Gist object from the json of the gist
+                    this.internal_gists.add(new Gist.from_json(node)); // append the this.internal_gists field a Gist object from the json of the gist
                 });
             }
 
-            return gists.data;
+            return this.internal_gists.data;
         }
 
         public Gist create(Gist gist, bool update_local_gists){

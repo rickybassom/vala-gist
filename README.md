@@ -4,23 +4,23 @@ Gist client library for Vala
 ```vala
 using ValaGist;
 
-public static int main(string[] argv) {
-    MyProfile profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
+public int main(string[] argv) {
+    var profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
 
-    GLib.GenericArray<Gist> gists = profile.list_all();
-    gists.foreach ((gist) => {
+    Gist[] gists = profile.list_all();
+    foreach (Gist gist in gists){
         print(gist.name + "\n");
         print(gist.description + "\n");
         print(gist.created_at + "\n");
 
-        gist.files.foreach((file) => {
+        foreach (GistFile file in gist.files){
             print(file.filename + "\n");
             print(file.get_content()+ "\n");
-        });
+        }
 
         print("\n");
-   });
-   return 0;
+    }
+    return 0;
 }
 ```
 ```sh

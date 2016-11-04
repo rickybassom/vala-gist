@@ -2,9 +2,9 @@ namespace ValaGist{
     public interface Profile : Object {
         public abstract string id { get; internal set; }
         public abstract string name { get; internal set; }
-        internal abstract GenericArray<Gist> gists { get; set; }
+        internal abstract GenericArray<Gist> internal_gists { get; set; }
 
-        public abstract Gist[] list_all();
+        public abstract Gist[] list_all(bool fetch_from_server = true);
 
     }
 }

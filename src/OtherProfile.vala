@@ -4,14 +4,14 @@ namespace ValaGist {
 
         public string id { get; internal set; }
         public string name { get; internal set; }
-        internal GenericArray<Gist> gists { get; set; }
+        internal GenericArray<Gist> internal_gists { get; set; }
 
         private Soup.Session session = new Soup.Session();
         private Json.Parser parser = new Json.Parser();
         private const string BASE_URL = "https://api.github.com";
 
         public OtherProfile.from_username(string name, bool check=true) throws ValaGist.Error {
-            gists = new GenericArray<Gist>();
+            this.internal_gists = new GenericArray<Gist>();
             if(check){ // if wants to check if token if correct at contructor
                 if(user_exists(name)){
                     this.name = name;
@@ -59,12 +59,13 @@ namespace ValaGist {
 
         // create OtherProfile object from json object
         internal OtherProfile.from_json(Json.Node node){
-            gists = new GenericArray<Gist>();
+            this.internal_gists = new GenericArray<Gist>();
             this.id = node.get_object().get_object_member("owner").get_int_member("id").to_string();
             this.name = node.get_object().get_object_member("owner").get_string_member("login");
         }
 
-        public Gist[] list_all(){
+        public Gist[] list_all(bool fetch_from_server = true){
+            if(!fetch_from_server && this.internal_gists.length != 0) return this.internal_gists.data;
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             if(MyProfile.token != null){ // if actual user loged in
                 headers.append("Authorization", "token %s".printf(MyProfile.token)); // not essential for requests but increases rate limit
@@ -92,14 +93,14 @@ namespace ValaGist {
 
                     Json.Array root_object = parser.get_root().get_array();
                     root_object.foreach_element((arr, index, node) => { // for each gist in json
-                        gists.add(new Gist.from_json(node)); // append the this.gists field a Gist object from the json of the gist
+                        this.internal_gists.add(new Gist.from_json(node)); // append the this.internal_gists field a Gist object from the json of the gist
                     });
                 }catch(Error e){
                     print(e.message);
                 }
             }
 
-            return gists.data;
+            return this.internal_gists.data;
         }
 
     }

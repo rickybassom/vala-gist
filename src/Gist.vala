@@ -8,7 +8,11 @@ namespace ValaGist{
         public string description { get; private set; }
         private string temp_description { private get; private set; }
         public bool is_public { get; private set; }
-        public GenericArray<GistFile> files { get; private set; }
+        internal GenericArray<GistFile> internal_files { get; set; }
+        public GistFile[] files {
+            get { return this.internal_files.data; }
+            private set {}
+        }
         private GenericArray<GistFile> temp_files { private get; private set; }
         public string created_at { get; private set; }
         public string updated_at { get; private set; }
@@ -17,27 +21,26 @@ namespace ValaGist{
         // create a gist object from parameters
         public Gist.local(string description, bool is_public,
                            GistFile[] files){
-            GenericArray<GistFile> _files = new GenericArray<GistFile>();
-            _files.data = files;
+            internal_files = new GenericArray<GistFile>();
+            this.internal_files.data = files;
 
             this.description = description;
             this.temp_description = this.description;
             this.is_public = is_public;
-            if(_files.length == 0){
+            if(internal_files.length == 0){
                 Errors.gist_needs_more_than_one_file();
             }
-            this.files = _files; // orginal copy of files
-            this.files.sort((a, b) => { // sort by filename
+            this.internal_files.sort((a, b) => { // sort by filename
                 CompareFunc<string> strcmp = GLib.strcmp;
                 return strcmp(a.filename, b.filename);
             });
-            this.temp_files = this.files; // temp_files is used to store changes to the files so orginal is unchanged
-            this.name = _files[0].filename; // first file's name in gist is the name of the whole gist
+            this.temp_files = this.internal_files; // temp_files is used to store changes to the files so orginal is unchanged
+            this.name = this.internal_files[0].filename; // first file's name in gist is the name of the whole gist
         }
 
         // create a gist object a json gist file
         internal Gist.from_json(Json.Node node){
-            files = new GenericArray<GistFile>(); // array used to store files of gist
+            this.internal_files = new GenericArray<GistFile>(); // array used to store files of gist
 
             // set object fields to node properties
             this.id = node.get_object().get_string_member("id");
@@ -46,10 +49,10 @@ namespace ValaGist{
             this.temp_description = this.description;
             this.is_public = node.get_object().get_boolean_member("public");
             node.get_object().get_object_member("files").foreach_member((arr, index, node) => { // loop through array files in json and append GistFile object to array
-                files.add(new GistFile.from_json(node)); // constructor in GistFile.from_json extracts data from node into object fields
+                this.internal_files.add(new GistFile.from_json(node)); // constructor in GistFile.from_json extracts data from node into object fields
             });
-            this.temp_files = this.files; // temp_files is used to store changes to the files so orginal is unchanged
-            this.name = files[0].filename; // first file's name in gist is the name of the whole gist
+            this.temp_files = this.internal_files; // temp_files is used to store changes to the files so orginal is unchanged
+            this.name = this.internal_files[0].filename; // first file's name in gist is the name of the whole gist
             this.created_at = node.get_object().get_string_member("created_at");
             this.updated_at = node.get_object().get_string_member("updated_at");
             this.owner = new OtherProfile.from_json(node);
@@ -71,7 +74,7 @@ namespace ValaGist{
 
             var files_json = builder.set_member_name ("files");
             files_json.begin_object (); // "files": {
-            (use_temp ? temp_files : files).foreach((file) => {
+            (use_temp ? temp_files : this.internal_files).foreach((file) => {
                 files_json.set_member_name (file.filename);
                 files_json.begin_object (); // "this is a filename": {
                 files_json.set_member_name ("filename");
@@ -97,7 +100,7 @@ namespace ValaGist{
         // checks if filename is in the gists files
         internal bool includes_file(string filename){
             bool found = false;
-            files.foreach((file) => {
+            this.internal_files.foreach((file) => {
                 if(file.filename == filename){
                     found = true;
                     return;
