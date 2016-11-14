@@ -1,7 +1,7 @@
 project('Vala Gist', ['vala', 'c'],
         version: '1.0.0-dev',
         license: 'GNU',
-        meson_version: '>=0.31')
+        meson_version: '>=0.35')
 
 api_version = '1.0'
 
