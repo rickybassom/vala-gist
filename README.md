@@ -5,7 +5,7 @@ Gist client library for Vala
 using ValaGist;
 
 public int main(string[] argv) {
-    var profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
+    var profile = new MyProfile("ENTER GITHUB TOKEN HERE");
 
     Gist[] gists = profile.list_all();
     foreach (Gist gist in gists){
@@ -50,21 +50,21 @@ sudo ninja-build install
 ### Create new gist
 
 ```vala
-var profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
+var profile = new MyProfile("ENTER GITHUB TOKEN HERE");
 
 GistFile[] files = {
-    new GistFile.local("file_name.txt", "file content"),
-    new GistFile.local("file_name2.txt", "file content 2"),
-    new GistFile.local("file_name3.txt", "file content 3")
+    new GistFile("file_name.txt", "file content"),
+    new GistFile("file_name2.txt", "file content 2"),
+    new GistFile("file_name3.txt", "file content 3")
 };
 
-profile.create(new Gist.local("des", false, files));
+profile.create(new Gist("des", false, files));
 ```
 
 ### Edit gist
 
 ```vala
-var profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
+var profile = new MyProfile("ENTER GITHUB TOKEN HERE");
 
 Gist[] gists = profile.list_all();
 Gist edit_gist = gists[0];
@@ -73,11 +73,11 @@ edit_gist.edit_description("Changed description");
 edit_gist.files[0].edit_file_content("changed content");
 
 edit_gist.add_file(
-    new GistFile.local("newfile.txt", "new file with content!")
+    new GistFile("newfile.txt", "new file with content!")
 );
 
 edit_gist.add_file(
-    new GistFile.local("newfile2.txt", "new file with content! 2")
+    new GistFile("newfile2.txt", "new file with content! 2")
 );
 
 profile.edit(edit_gist);
@@ -86,7 +86,7 @@ profile.edit(edit_gist);
 ### Delete files
 
 ```vala
-var profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
+var profile = new MyProfile("ENTER GITHUB TOKEN HERE");
 
 Gist[] gists = profile.list_all();
 Gist edit_gist = gists[0];
@@ -102,7 +102,7 @@ profile.edit(edit_gist, delete_files);
 ### Delete gist
 
 ```vala
-var profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
+var profile = new MyProfile("ENTER GITHUB TOKEN HERE");
 
 Gist[] gists = profile.list_all();
 profile.delete(gists[0]);
@@ -111,7 +111,7 @@ profile.delete(gists[0]);
 ### Other profiles
 
 ```vala
-var profile = new MyProfile.login("ENTER GITHUB TOKEN HERE");
+var profile = new MyProfile("ENTER GITHUB TOKEN HERE");
 
 Gist[] gists = profile.list_all();
 Gist gist = gists[0];
@@ -123,7 +123,7 @@ print(gist.owner.list_all()[0].name);
 ### No login
 
 ```vala
-OtherProfile user = new OtherProfile.from_username("rickybas");
+OtherProfile user = new OtherProfile("rickybas");
 print(user.name + "\n");
 print(user.id + "\n");
 

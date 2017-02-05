@@ -18,7 +18,7 @@ namespace ValaGist {
         public OtherProfile owner { get; private set; }
 
         // create a gist object from parameters
-        public Gist.local(string description, bool is_public,
+        public Gist(string description, bool is_public,
                            GistFile[] files) {
             internal_files = new GenericArray<GistFile>();
             this.internal_files.data = files;

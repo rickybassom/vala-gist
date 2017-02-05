@@ -9,7 +9,7 @@ namespace ValaGist {
         private Json.Parser parser = new Json.Parser();
         private const string BASE_URL = "https://api.github.com";
 
-        public OtherProfile.from_username(string name, bool check=true) throws ValaGist.Error {
+        public OtherProfile(string name, bool check=true) throws ValaGist.Error {
             this.internal_gists = new GenericArray<Gist>();
             if(check){ // if wants to check if token if correct at contructor
                 if(user_exists(name)){
@@ -18,6 +18,13 @@ namespace ValaGist {
             }else{
                 this.name = name;
             }
+        }
+
+        // create OtherProfile object from json object
+        internal OtherProfile.from_json(Json.Node node) {
+            this.internal_gists = new GenericArray<Gist>();
+            this.id = node.get_object().get_object_member("owner").get_int_member("id").to_string();
+            this.name = node.get_object().get_object_member("owner").get_string_member("login");
         }
 
         private bool user_exists(string name) throws ValaGist.Error {
@@ -54,13 +61,6 @@ namespace ValaGist {
                 this.name = root_object.get_string_member ("login");
             }
             return true;
-        }
-
-        // create OtherProfile object from json object
-        internal OtherProfile.from_json(Json.Node node) {
-            this.internal_gists = new GenericArray<Gist>();
-            this.id = node.get_object().get_object_member("owner").get_int_member("id").to_string();
-            this.name = node.get_object().get_object_member("owner").get_string_member("login");
         }
 
         public Gist[] list_all() {

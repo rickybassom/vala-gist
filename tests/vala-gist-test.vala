@@ -1,7 +1,7 @@
 using ValaGist;
 
 public int main (string[] args) {
-    OtherProfile user = new OtherProfile.from_username("rickybas");
+    OtherProfile user = new OtherProfile("rickybas", true);
     string name = user.name;
     string id = user.id;
 

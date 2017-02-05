@@ -10,7 +10,7 @@ namespace ValaGist {
         private Json.Parser parser = new Json.Parser();
         private const string BASE_URL = "https://api.github.com";
 
-        public MyProfile.login(string token, bool check = true) throws ValaGist.Error {
+        public MyProfile(string token, bool check = true) throws ValaGist.Error {
             this.internal_gists = new GenericArray<Gist>();
             if(check){ // if wants to check if token if correct at contructor
                 if(auth_success(token)){

@@ -14,7 +14,7 @@ namespace ValaGist {
         private const string BASE_URL = "https://api.github.com";
 
         // create a gist file object from parameters
-        public GistFile.local(string filename, string file_content) {
+        public GistFile(string filename, string file_content) {
             this.filename = filename;
             this.temp_filename = this.filename;
             this.file_content = file_content;
