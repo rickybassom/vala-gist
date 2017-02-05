@@ -1,4 +1,4 @@
-namespace ValaGist{
+namespace ValaGist {
 
     public class Gist {
         public string id { get; private set; }
@@ -122,9 +122,7 @@ namespace ValaGist{
 
 
 /*
-
 Example gist
-
 {
   "url": "https://api.github.com/gists/aa5a315d61ae9438b18d",
   "forks_url": "https://api.github.com/gists/aa5a315d61ae9438b18d/forks",
@@ -230,6 +228,5 @@ Example gist
     }
   ]
 }
-
 */
 

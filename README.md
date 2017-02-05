@@ -28,8 +28,17 @@ valac test.vala --pkg valagist-1.0
 ./test
 ```
 
+## Dependencies
+These dependencies must be present before building
+
+- `meson>=0.35`
+- `json-glib-1.0`
+- `libsoup-2.4`
+
 ## Installation
+
 ```sh
+git clone https://github.com/rickybas/vala-gist.git
 mkdir build/ && cd build
 meson ..
 ninja-build # or 'ninja' on some distributions
@@ -132,3 +141,11 @@ foreach (Gist gist in gists){
     print("\n");
 }
 ```
+
+## Uninstall
+
+```sh
+chmod +x uninstall.sh
+./uninstall.sh
+```
+
