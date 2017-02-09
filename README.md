@@ -31,7 +31,7 @@ valac test.vala --pkg valagist-1.0
 ## Dependencies
 These dependencies must be present before building
 
-- `meson>=0.35`
+- `meson<=0.36.0`
 - `json-glib-1.0`
 - `libsoup-2.4`
 
