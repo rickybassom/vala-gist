@@ -9,16 +9,19 @@ valagist_sources = files(
 )
 
 valagist_lib = library('valagist-' + api_version, valagist_sources,
+		  vala_header: 'valagist-' + api_version + '.h',
+		  vala_vapi: 'valagist-' + api_version + '.vapi',
 		  dependencies: [glib, gobject, gio, json_glib, libsoup],
                   vala_args: ['--vapidir=' + meson.current_source_dir()],
                   c_args: ['-g', '-O0', '-Wno-unused', '-l', 'valagist-1.0.h'],
-                  install: true)
+                  install: true,
+                  install_dir: [true, true, true])
 
 valagist = declare_dependency(include_directories: include_directories('.'),
                               link_with: valagist_lib)
 
-install_headers(meson.current_build_dir() +'/valagist-' + api_version + '.h', subdir: 'valagist-' + api_version)
-install_data(meson.current_build_dir() + '/valagist-' + api_version + '.vapi', install_dir: 'share/vala/vapi')
+#install_headers(meson.current_build_dir() +'/valagist-' + api_version + '.h', subdir: 'valagist-' + api_version)
+#install_data(meson.current_build_dir() + '/valagist-' + api_version + '.vapi', install_dir: 'share/vala/vapi')
 
 pkgconfig = import('pkgconfig')
 pkgconfig.generate(name: 'valagist-' + api_version,

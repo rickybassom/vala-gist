@@ -76,6 +76,8 @@ namespace ValaGist {
             msg.request_body = body;
             session.send_message(msg);
 
+            this.internal_gists = new GenericArray<Gist>();
+
             if (msg.status_code != 200) { // if error in response
                 if (msg.status_code == 401) { // unauthorized
                     Errors.incorrect_token(msg.status_code);

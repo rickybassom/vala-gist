@@ -1,7 +1,7 @@
 project('Vala Gist', ['vala', 'c'],
         version: '1.0.0-dev',
         license: 'GNU',
-        meson_version: '<=0.36.0')
+        meson_version: '>=0.40.1')
 
 api_version = '1.0'
 
@@ -13,7 +13,7 @@ gio_unix = dependency('gio-unix-2.0', version: '>=2.40')
 json_glib = dependency('json-glib-1.0', version: '>=1.0')
 libsoup = dependency('libsoup-2.4', version: '>=2.4')
 
-meson.add_install_script('_install.sh')
+meson.add_install_script('meson/_install.sh')
 
 subdir('src')
 subdir('tests')
