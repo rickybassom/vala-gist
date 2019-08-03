@@ -13,7 +13,7 @@ valagist_lib = library('valagist-' + api_version, valagist_sources,
 		  vala_vapi: 'valagist-' + api_version + '.vapi',
 		  dependencies: [glib, gobject, gio, json_glib, libsoup],
                   vala_args: ['--vapidir=' + meson.current_source_dir()],
-                  c_args: ['-g', '-O0', '-Wno-unused', '-l', 'valagist-1.0.h'],
+                  c_args: ['-g', '-O0', '-Wno-unused'],
                   install: true,
                   install_dir: [true, true, true])
 
@@ -31,4 +31,4 @@ pkgconfig.generate(name: 'valagist-' + api_version,
                    requires: 'glib-2.0 gobject-2.0 json-glib-1.0 libsoup-2.4',
                    libraries: valagist_lib,
                    subdirs: 'valagist-' + api_version)
-
+        

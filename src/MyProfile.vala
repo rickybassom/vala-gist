@@ -139,9 +139,9 @@ namespace ValaGist {
             return new Gist.from_json(root); // return gist created on server
         }
 
-        public Gist edit(Gist gist, GistFile delete_files[] = {}) {
+        public Gist edit(Gist gist, GLib.Array<GistFile> delete_files) {
             GenericArray<GistFile> _delete_files = new GenericArray<GistFile>();
-            _delete_files.data = delete_files;
+            _delete_files.data = delete_files.data;
             if(gist.id == null){ // gist not on server
                 Errors.gist_not_on_server(gist.name);
             }
