@@ -43,6 +43,10 @@ cd build
 ninja # or 'ninja-build' on some distributions
 sudo ninja install
 ninja test
+
+(if not working try:)
+sudo mv /usr/local/lib64/libvalagist-1.0.so /usr/lib64/libvalagist-1.0.so
+sudo mv /usr/local/lib64/pkgconfig/valagist-1.0.pc /usr/lib64/pkgconfig/valagist-1.0.pc
 ```
 
 ## More examples

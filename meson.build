@@ -13,7 +13,5 @@ gio_unix = dependency('gio-unix-2.0', version: '>=2.40')
 json_glib = dependency('json-glib-1.0', version: '>=1.0')
 libsoup = dependency('libsoup-2.4', version: '>=2.4')
 
-meson.add_install_script('meson/_install.sh')
-
 subdir('src')
 subdir('tests')
