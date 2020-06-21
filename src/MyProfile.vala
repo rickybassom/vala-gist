@@ -128,13 +128,15 @@ namespace ValaGist {
                     }
                 }
             }
+
             Json.Node root = new Json.Node(Json.NodeType.OBJECT);
             try{
                 parser.load_from_data((string) msg.response_body.flatten().data, -1);
                 root.set_object(parser.get_root().get_object());
-            }catch(Error e){
+            } catch(Error e){
                 print(e.message);
             }
+
             list_all();
             return new Gist.from_json(root); // return gist created on server
         }
@@ -142,19 +144,19 @@ namespace ValaGist {
         public Gist edit(Gist gist, GLib.Array<GistFile> delete_files = new GLib.Array<GistFile> ()) {
             GenericArray<GistFile> _delete_files = new GenericArray<GistFile>();
             _delete_files.data = delete_files.data;
+
             if(gist.id == null){ // gist not on server
                 Errors.gist_not_on_server(gist.name);
-            }
-            else if(gist.owner.id != this.id){ // if the gist has not been created by this user
+            } else if(gist.owner.id != this.id){ // if the gist has not been created by this user
                 Errors.gist_not_owned(this.name, gist.name);
-            }
-            else if(_delete_files.length != 0){
+            } else if(_delete_files.length != 0){
                 _delete_files.foreach((delete_file) => {
                     if(!gist.includes_file(delete_file.filename)){ // if gist does not include file
                         Errors.gist_file_not_found_for_delete(delete_file.filename);
                     }
                 });
             }
+
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);
             headers.append("Authorization", "token %s".printf(token));
             headers.append("User-Agent", "vala-gist");

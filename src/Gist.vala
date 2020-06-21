@@ -58,7 +58,7 @@ namespace ValaGist {
         }
 
         // converts object to json
-        internal string to_json(bool use_temp = false, GistFile[] delete_files = {}) {
+        public string to_json(bool use_temp = false, GistFile[] delete_files = {}) {
             // See below for example gist in json format
             var generator = new Json.Generator ();
 
@@ -74,6 +74,12 @@ namespace ValaGist {
             var files_json = builder.set_member_name ("files");
             files_json.begin_object (); // "files": {
             (use_temp ? temp_files : this.internal_files).foreach((file) => {
+                // get files to delete from changed filenames
+                if (file.temp_filename != file.filename) {
+                    files_json.set_member_name (file.filename)
+                        .add_null_value (); // "this is a filename": null
+                }
+
                 files_json.set_member_name (file.filename);
                 files_json.begin_object (); // "this is a filename": {
                 files_json.set_member_name ("filename");
@@ -113,9 +119,12 @@ namespace ValaGist {
         }
 
         public void add_file(GistFile file) {
-            this.temp_files.add(file); // changes non-orginal copy of files
+            this.temp_files.add (file); // changes non-orginal copy of files
         }
 
+        public void replace_with_files (GistFile[] files) {
+            this.temp_files.data = files;
+        }
     }
 
 }

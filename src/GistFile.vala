@@ -39,6 +39,7 @@ namespace ValaGist {
             if(MyProfile.token != null){
                 headers.append("Authorization", "token %s".printf(MyProfile.token));
             }
+
             headers.append("User-Agent", "vala-gist");
             Soup.Message msg = new Soup.Message("GET", raw_url);
             Soup.MessageBody body = new Soup.MessageBody();
