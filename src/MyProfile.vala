@@ -149,12 +149,6 @@ namespace ValaGist {
                 Errors.gist_not_on_server(gist.name);
             } else if(gist.owner.id != this.id){ // if the gist has not been created by this user
                 Errors.gist_not_owned(this.name, gist.name);
-            } else if(_delete_files.length != 0){
-                _delete_files.foreach((delete_file) => {
-                    if(!gist.includes_file(delete_file.filename)){ // if gist does not include file
-                        Errors.gist_file_not_found_for_delete(delete_file.filename);
-                    }
-                });
             }
 
             Soup.MessageHeaders headers = new Soup.MessageHeaders(Soup.MessageHeadersType.REQUEST);

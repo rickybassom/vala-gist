@@ -75,12 +75,12 @@ namespace ValaGist {
             files_json.begin_object (); // "files": {
             (use_temp ? temp_files : this.internal_files).foreach((file) => {
                 // get files to delete from changed filenames
-                if (file.temp_filename != file.filename) {
+                if (file.temp_filename != file.filename && file.is_real) {
                     files_json.set_member_name (file.filename)
                         .add_null_value (); // "this is a filename": null
                 }
 
-                files_json.set_member_name (file.filename);
+                files_json.set_member_name ((use_temp && !file.is_real) ? file.temp_filename : file.filename);
                 files_json.begin_object (); // "this is a filename": {
                 files_json.set_member_name ("filename");
                 files_json.add_string_value (use_temp ? file.temp_filename : file.filename); // "filename": "this is a filename",

@@ -9,12 +9,14 @@ namespace ValaGist {
         private string temp_file_content { private get; private set; }
         public string raw_url { get; private set; }
         public string size { get; private set; }
+        public bool is_real { get; private set; }
 
         private Soup.Session session = new Soup.Session();
         private const string BASE_URL = "https://api.github.com";
 
         // create a gist file object from parameters
-        public GistFile(string filename, string file_content) {
+        public GistFile(string filename, string file_content, bool is_real=false) {
+            this.is_real = is_real;
             this.filename = filename;
             this.temp_filename = this.filename;
             this.file_content = file_content;
@@ -22,7 +24,8 @@ namespace ValaGist {
         }
 
         // create a gist file object a json
-        internal GistFile.from_json(Json.Node node) {
+        internal GistFile.from_json(Json.Node node, bool is_real=true) {
+            this.is_real = is_real;
             this.filename = node.get_object().get_string_member("filename");
             this.temp_filename = this.filename; // temp_filename is used to store changes to the filename so orginal is unchanged
             this.g_type = node.get_object().get_string_member("type");
