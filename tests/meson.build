@@ -1,3 +1,2 @@
-test('valagist', executable('vala-gist-test', 'vala-gist-test.vala',
-			    dependencies: [glib, gobject, valagist]),
-			    args: '')
+test('vala-gist-test', executable('vala-gist-test', ['vala-gist-test.vala'], dependencies: deps + [valagist_dep]))
+
