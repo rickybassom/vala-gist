@@ -37,7 +37,7 @@ These dependencies must be present before building
 ## Installation
 
 ```sh
-git clone https://github.com/rickybas/vala-gist.git
+git clone https://github.com/rickybassom/vala-gist.git
 meson build
 cd build
 ninja # or 'ninja-build' on some distributions
